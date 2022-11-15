@@ -24,6 +24,9 @@
 
 ## Description
 
+A webservice for managing your restaurant!
+This is a proof of concept made to try out NestJS and an architecture differenet from the usual super fat services and thin models.
+
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
