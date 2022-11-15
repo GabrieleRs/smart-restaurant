@@ -1,0 +1,3 @@
+class CreateLiveOrderDTO {
+    meals: string[];
+}
