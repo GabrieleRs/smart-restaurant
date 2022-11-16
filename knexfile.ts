@@ -6,6 +6,7 @@
 export default {
   local: {
     client: 'sqlite3',
+    useNullAsDefault: true,
     connection: {
       filename: './dev.sqlite3',
     },

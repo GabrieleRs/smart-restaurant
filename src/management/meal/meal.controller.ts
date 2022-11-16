@@ -3,10 +3,10 @@ import { MealRepository } from './meal.repository';
 
 @Controller('meal')
 export class MealController {
-    constructor(@Inject(MealRepository) private mealRepository: MealRepository) { }
+  constructor(@Inject(MealRepository) private mealRepository: MealRepository) {}
 
-    @Get()
-    getMeals() {
-        return this.mealRepository.getMeals();
-    }
+  @Get()
+  list() {
+    return this.mealRepository.listMeals();
+  }
 }

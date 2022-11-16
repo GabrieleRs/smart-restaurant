@@ -1,5 +1,5 @@
-import { Meal } from "src/management/meal/model/meal";
+import { Meal } from 'src/management/meal/model/meal';
 
 export interface OrderMeal extends Meal {
-    status: 'pending' | 'in-progress' | 'done';
+  status: 'pending' | 'in-progress' | 'done';
 }

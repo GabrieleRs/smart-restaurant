@@ -7,8 +7,12 @@ import { ManagementModule } from './management/management.module';
 import knexfile from 'knexfile';
 
 @Module({
-  imports: [KnexModule.forRoot(knexfile[process.env.NODE_ENV]), LiveOrderModule, ManagementModule],
+  imports: [
+    KnexModule.forRoot(knexfile[process.env.NODE_ENV]),
+    LiveOrderModule,
+    ManagementModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

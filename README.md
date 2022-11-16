@@ -61,6 +61,25 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Database
+
+```bash
+# creating a migration
+$ npx knex migrate:make {migration name}
+
+# running the migrations
+$ npx knex migrate:latest --env {local|...}
+
+# creating a seed
+$ npx knex seed:make {seed name}
+
+# running seeds
+$ npx knex seed:run --env {local|...}
+
+```
+
+For more info see the [Knex docs](https://knexjs.org/guide/migrations.html)
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
