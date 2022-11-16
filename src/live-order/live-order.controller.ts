@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { LiveOrderService } from './live-order.service';
+import { AddMealsDTO } from './model/add-meals.dto';
 import { CreateLiveOrderDTO } from './model/create-live-order.dto';
 
 @Controller('live-order')
@@ -8,11 +9,23 @@ export class LiveOrderController {
 
   @Get()
   list() {
-    return this.service.listLiveOrders();
+    return this.service.listOrders();
   }
 
   @Post()
   create(@Body() orderDTO: CreateLiveOrderDTO) {
-    return this.service.createLiveOrder(orderDTO);
+    return this.service.createOrder(orderDTO);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.service.findOrderById(id);
+  }
+
+  @Post(':id/meals')
+  addMeal(@Param('id') id: string, @Body() addMealsDTO: AddMealsDTO) {
+    {
+      return this.service.addMealsToLiveOrder(id, addMealsDTO);
+    }
   }
 }

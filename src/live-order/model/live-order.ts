@@ -1,4 +1,13 @@
+import { NotFoundError } from 'src/errors/not-found-error';
+import { StatusError } from '../../errors/status-error';
 import { OrderMeal } from './order-meal';
+
+/* 
+  This is the main class representing an order created by a customer in the restaurant.
+  It contains the list of meals ordered, the status of the order and the notes.
+  An open order can receive new meals, be cancelled, or be closed.
+  Once an order is closed, it cannot be modified an it's ready to be paid.
+*/
 export type OrderStatus = 'open' | 'closed' | 'paid';
 export class LiveOrder {
   private _id: string;
@@ -20,13 +29,6 @@ export class LiveOrder {
     return this._meals.reduce((total, meal) => total + meal.price, 0);
   }
 
-  get cookingStatus(): OrderMeal['status'] {
-    if (this._meals.every((meal) => meal.status === 'done')) return 'done';
-    if (this._meals.some((meal) => meal.status === 'in-progress'))
-      return 'in-progress';
-    return 'pending';
-  }
-
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -43,17 +45,35 @@ export class LiveOrder {
     return this._status;
   }
 
+  addMeal(meal: OrderMeal) {
+    if (this._status === 'closed') {
+      throw new StatusError('Cannot add meal to closed order');
+    }
+    this._meals.push(meal);
+  }
+
   removeMeal(mealId: string) {
+    const meal = this._meals.find((meal) => meal.id === mealId);
+    if (meal.status != 'pending') {
+      throw new StatusError('Cannot remove meal that is not pending');
+    }
     this._meals = this._meals.filter((meal) => meal.id !== mealId);
   }
 
-  updateMealStatus(mealId: string, status: 'pending' | 'in-progress' | 'done') {
+  updateMealStatus(mealId: string, status: OrderMeal['status']) {
     const meal = this._meals.find((meal) => meal.id === mealId);
-    if (meal) meal.status = status;
+    if (meal) {
+      meal.status = status;
+    } else {
+      throw new NotFoundError('Meal not found');
+    }
   }
 
-  addMeal(meal: OrderMeal) {
-    this._meals.push(meal);
+  close() {
+    if (this._status !== 'open') {
+      throw new StatusError('Cannot close an order that is not open');
+    }
+    this._status = 'closed';
   }
 
   constructor(
@@ -77,7 +97,6 @@ export class LiveOrder {
       id: this._id,
       meals: this._meals,
       totalPrice: this.totalPrice,
-      cookingStatus: this.cookingStatus,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
       notes: this.notes,

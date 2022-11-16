@@ -1,10 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Knex } from 'knex';
+import { OrderMeal } from './model/order-meal';
+import { OrderStatus } from './model/live-order';
 declare module 'knex/types/tables' {
   interface LiveOrders {
     id: string;
     notes: string;
-    status: string;
+    status: OrderStatus;
     created_at: Date;
     updated_at: Date;
   }
@@ -20,7 +22,7 @@ declare module 'knex/types/tables' {
     id: string;
     live_orders_id: string;
     meals_id: string;
-    status: string;
+    status: OrderMeal['status'];
   }
 
   interface Tables {

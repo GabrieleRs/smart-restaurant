@@ -6,6 +6,6 @@ import { Meal } from './model/meal';
 export class MealService {
   constructor(@Inject(MealRepository) private repository: MealRepository) {}
   listMeals(): Promise<Meal[]> {
-    return this.repository.listMeals();
+    return this.repository.list();
   }
 }

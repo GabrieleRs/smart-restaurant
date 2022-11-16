@@ -7,6 +7,6 @@ export class MealController {
 
   @Get()
   list() {
-    return this.mealRepository.listMeals();
+    return this.mealRepository.list();
   }
 }
