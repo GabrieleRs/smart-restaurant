@@ -53,19 +53,22 @@ export class LiveOrder {
   }
 
   addMeal(meal: OrderMeal) {
-    if (this._status === 'closed') {
-      throw new StatusError('Cannot add meal to closed order');
+    if (this._status !== 'open') {
+      throw new StatusError('Cannot add a meal to a closed order');
     }
     this._meals.push(meal);
   }
 
   removeMeal(mealId: string) {
     const meal = this._meals.find((meal) => meal.id === mealId);
+    if (this._status !== 'open') {
+      throw new StatusError('Cannot remove a meal from a closed order');
+    }
     if (!meal) {
       throw new NotFoundError('Meal not found');
     }
     if (meal.status != 'pending') {
-      throw new StatusError('Cannot remove meal that is not pending');
+      throw new StatusError('Cannot remove a meal that is not pending');
     }
     this._meals = this._meals.filter((meal) => meal.id !== mealId);
   }
