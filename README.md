@@ -49,10 +49,13 @@ The close `/live-order/{id}/close` api can be called to lock the order, and prev
 
 ### TODO
 
+- Order deletion
 - OpenAPI docs
 - Meal crud
 - Order payment
 - Counter and seats management
+- Restaurant management
+- Authentication
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
