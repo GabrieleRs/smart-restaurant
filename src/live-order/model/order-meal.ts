@@ -5,5 +5,6 @@ import { Meal } from 'src/management/meal/model/meal';
   A meal in an order has a status that shows its current preparation status.
  */
 export interface OrderMeal extends Meal {
+  mealId: string;
   status: 'pending' | 'in-progress' | 'served';
 }

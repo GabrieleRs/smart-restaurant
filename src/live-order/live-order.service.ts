@@ -3,9 +3,8 @@ import { MealService } from 'src/management/meal/meal.service';
 import { LiveOrderRepository } from './live-order.repository';
 import { CreateLiveOrderDTO } from './model/create-live-order.dto';
 import { LiveOrder } from './model/live-order';
-import { v4 } from 'uuid';
 import { NotFoundError } from 'src/errors/not-found-error';
-import { AddMealsDTO } from './model/add-meals.dto';
+import { MealsListDTO } from './model/meals-list.dto';
 @Injectable()
 export class LiveOrderService {
   constructor(
@@ -19,13 +18,15 @@ export class LiveOrderService {
 
   async createOrder(orderDTO: CreateLiveOrderDTO): Promise<LiveOrder> {
     const mealsMap = await this.getMealsMap();
-    const order = new LiveOrder(v4());
+    const order = new LiveOrder();
     orderDTO.meals.forEach((id) => {
       this.checkMealExists(mealsMap, id);
       const meal = mealsMap.get(id);
       order.addMeal({
         ...meal,
         status: 'pending',
+        mealId: meal.id,
+        id: null,
       });
     });
     order.notes = orderDTO.notes;
@@ -37,9 +38,9 @@ export class LiveOrderService {
     return this.repository.findById(id);
   }
 
-  async addMealsToLiveOrder(
+  async addMealsToOrder(
     id: string,
-    addMealsDTO: AddMealsDTO,
+    addMealsDTO: MealsListDTO,
   ): Promise<LiveOrder> {
     const order = await this.repository.findById(id);
     const mealsMap = await this.getMealsMap();
@@ -49,11 +50,30 @@ export class LiveOrderService {
       order.addMeal({
         ...meal,
         status: 'pending',
+        mealId: meal.id,
+        id: null,
       });
     });
-    order.updatedAt = new Date();
     await this.repository.update(order);
     return order;
+  }
+
+  async removeMealsFromOrder(
+    id: string,
+    mealsListDTO: MealsListDTO,
+  ): Promise<LiveOrder> {
+    const order = await this.repository.findById(id);
+    mealsListDTO.meals.forEach((id) => {
+      order.removeMeal(id);
+    });
+    await this.repository.update(order);
+    return order;
+  }
+
+  async closeOrder(id: string) {
+    const order = await this.repository.findById(id);
+    order.close();
+    await this.repository.update(order);
   }
 
   private checkMealExists(mealsMap: Map<string, any>, id: string) {

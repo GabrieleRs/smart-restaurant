@@ -10,7 +10,7 @@ import { OrderMeal } from './order-meal';
 */
 export type OrderStatus = 'open' | 'closed' | 'paid';
 export class LiveOrder {
-  private _id: string;
+  private _id?: string;
   private _meals: OrderMeal[];
   private _status: OrderStatus;
   private _createdAt: Date;
@@ -19,6 +19,13 @@ export class LiveOrder {
 
   get id(): string {
     return this._id;
+  }
+
+  set id(id: string) {
+    if (this._id) {
+      throw new Error('Cannot change id');
+    }
+    this._id = id;
   }
 
   get meals(): OrderMeal[] {
@@ -54,6 +61,9 @@ export class LiveOrder {
 
   removeMeal(mealId: string) {
     const meal = this._meals.find((meal) => meal.id === mealId);
+    if (!meal) {
+      throw new NotFoundError('Meal not found');
+    }
     if (meal.status != 'pending') {
       throw new StatusError('Cannot remove meal that is not pending');
     }
@@ -62,11 +72,10 @@ export class LiveOrder {
 
   updateMealStatus(mealId: string, status: OrderMeal['status']) {
     const meal = this._meals.find((meal) => meal.id === mealId);
-    if (meal) {
-      meal.status = status;
-    } else {
+    if (!meal) {
       throw new NotFoundError('Meal not found');
     }
+    meal.status = status;
   }
 
   close() {
@@ -77,7 +86,7 @@ export class LiveOrder {
   }
 
   constructor(
-    id: string,
+    id?: string,
     meals?: OrderMeal[],
     status?: OrderStatus,
     createdAt?: Date,
@@ -97,9 +106,10 @@ export class LiveOrder {
       id: this._id,
       meals: this._meals,
       totalPrice: this.totalPrice,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
+      createdAt: this._createdAt.getTime(),
+      updatedAt: this._updatedAt?.getTime(),
       notes: this.notes,
+      status: this.status,
     };
   }
 }
