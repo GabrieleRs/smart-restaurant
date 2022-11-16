@@ -25,7 +25,34 @@
 ## Description
 
 A webservice for managing your restaurant!
-This is a proof of concept made to try out NestJS and an architecture differenet from the usual super fat services and thin models.
+This is a proof of concept made to try out NestJS.
+
+Before starting the app make sure to have run the [migrations and seeds](#Database)
+
+## Current features
+
+### Order management REST API
+
+The endpoint `/live-order` allows the creation of a new order starting from an array of meal ids and an optional "notes" property. Call the meal list api `/meal` to see the available meals.
+
+Request body example
+
+```json
+{
+  "notes": "",
+  "meals": ["de1a0f43-4093-4209-8f30-cb57fa1d4c28"]
+}
+```
+
+Once an order has been created it's possibile to add and remove meals `/live-order/{id}/meal` as long as the order status is "open".
+The close `/live-order/{id}/close` api can be called to lock the order, and prevent any further changes.
+
+### TODO
+
+- OpenAPI docs
+- Meal crud
+- Order payment
+- Counter and seats management
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
