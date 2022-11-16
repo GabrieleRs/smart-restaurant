@@ -7,6 +7,7 @@ export class KnexModule {
     static forRoot(config: Knex.Config): DynamicModule {
         const connection = knex(config);
         return {
+            global: true,
             module: KnexModule,
             providers: [
                 {
@@ -15,6 +16,7 @@ export class KnexModule {
                 },
             ],
             exports: [KNEX],
+
         };
     }
 }
